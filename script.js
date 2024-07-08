@@ -1,27 +1,115 @@
-window.onload = sendApiRequest;
+const startButton = document.getElementById('start-quiz');
+const questionContainer = document.getElementById('question-container');
+const questionElement = document.getElementById('question');
+const answerButtonsElement = document.getElementById('answer-buttons');
+const scoreContainer = document.getElementById('score-container');
+const scoreElement = document.getElementById('score');
+const restartButton = document.getElementById('restart-quiz');
 
-async function sendApiRequest() {
-    let response = await fetch('https://opentdb.com/api.php?amount=1&type=multiple');
-    let data = await response.json();
-    console.log(response);
-    console.log(data);
-    useApiData(data);
+let shuffledQuestions, currentQuestionIndex, score;
+
+const questions = [
+    {
+        question: "When is my birthday?",
+        answers: [
+            { text: "September 2nd", correct: true },
+            { text: "December 22nd", correct: false },
+            { text: "August 30th", correct: false },
+            { text: "July 1st", correct: false }
+        ]
+    },
+    {
+        question: "What is a group of unicorns known as?",
+        answers: [
+            { text: "A herd", correct: false },
+            { text: "A shimmer", correct: true },
+            { text: "A crowd", correct: false },
+            { text: "A rainbow", correct: false }
+        ]
+    },
+    {
+        question: "What is the fear of fun called?",
+        answers: [
+            { text: "Phobophobia", correct: false },
+            { text: "Cherophobia", correct: true },
+            { text: "Hilarophobia", correct: false },
+            { text: "Funophobia", correct: false }
+        ]
+    },
+    {
+        question: "Which country invented ice cream?",
+        answers: [
+            { text: "USA", correct: false },
+            { text: "Italy", correct: false },
+            { text: "France", correct: false },
+            { text: "China", correct: true }
+        ]
+    },
+    {
+        question: "Where is it illegal to frown at cows?",
+        answers: [
+            { text: "Australia", correct: false },
+            { text: "Canada", correct: false },
+            { text: "USA", correct: true },
+            { text: "UK", correct: false }
+        ]
+    }
+];
+
+startButton.addEventListener('click', startQuiz);
+restartButton.addEventListener('click', startQuiz);
+
+function startQuiz() {
+    startButton.classList.add('hide');
+    scoreContainer.classList.add('hide');
+    shuffledQuestions = questions.sort(() => Math.random() - 0.5);
+    currentQuestionIndex = 0;
+    score = 0;
+    questionContainer.classList.remove('hide');
+    setNextQuestion();
 }
 
-
-function useApiData(data) {
-    document.querySelector("#Category").innerHTML = `Category: ${data.results[0].category}`;
-    document.querySelector("#Difficulty").innerHTML = `Difficulty: ${data.results[0].difficulty}`;
-    document.querySelector("#Question").innerHTML = `Question: ${data.results[0].question}`;
-    document.querySelector("#answer1").innerHTML = data.results[0].correct_answer;
-    document.querySelector("#answer2").innerHTML = data.results[0].incorrect_answers[0];
-    document.querySelector("#answer3").innerHTML = data.results[0].incorrect_answers[1];
-    document.querySelector("#answer4").innerHTML = data.results[0].incorrect_answers[2];
+function setNextQuestion() {
+    resetState();
+    showQuestion(shuffledQuestions[currentQuestionIndex]);
 }
 
-let correctButton = document.querySelector("#answer1");
+function showQuestion(question) {
+    questionElement.innerText = question.question;
+    question.answers.forEach(answer => {
+        const button = document.createElement('button');
+        button.innerText = answer.text;
+        button.classList.add('btn');
+        if (answer.correct) {
+            button.dataset.correct = answer.correct;
+        }
+        button.addEventListener('click', selectAnswer);
+        answerButtonsElement.appendChild(button);
+    });
+}
 
-correctButton.addEventListener("click", () => {
-    alert("Correct! YOU ARE SO SMART");
-    sendApiRequest();
-});
+function resetState() {
+    while (answerButtonsElement.firstChild) {
+        answerButtonsElement.removeChild(answerButtonsElement.firstChild);
+    }
+}
+
+function selectAnswer(e) {
+    const selectedButton = e.target;
+    const correct = selectedButton.dataset.correct;
+    if (correct) {
+        score++;
+    }
+    currentQuestionIndex++;
+    if (currentQuestionIndex < shuffledQuestions.length) {
+        setNextQuestion();
+    } else {
+        showScore();
+    }
+}
+
+function showScore() {
+    questionContainer.classList.add('hide');
+    scoreContainer.classList.remove('hide');
+    scoreElement.innerText = score;
+}

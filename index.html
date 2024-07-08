@@ -4,43 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment3</title>
-    <script src="script.js" defer></script>
+    <title>Quiz Website</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
-
 <body>
-
-    <h1>
-        Trivia Game
-    </h1>
-    <p id="Category">
-
-    </p>
-
-    <p id="Difficulty">
-
-    </p>
-
-    <p id="Question">
-
-    </p>
-
-    <button id="answer1">
-
-    </button>
-    <button id="answer2">
-
-    </button>
-    <button id="answer3">
-
-    </button>
-    <button id="answer4">
-
-    </button>
-
-
-
+    <div class="container">
+        <center>
+            <h1>My Quiz</h1>
+        </center>
+        <div id="quiz-container">
+            <center>
+            <button id="start-quiz">Start Quiz</button>
+            </center>
+            <div id="question-container" class="hide">
+                <div id="question">Question text</div>
+                <div id="answer-buttons" class="btn-container">
+                    <button class="btn">Answer 1</button>
+                    <button class="btn">Answer 2</button>
+                    <button class="btn">Answer 3</button>
+                    <button class="btn">Answer 4</button>
+                </div>
+            </div>
+            <div id="score-container" class="hide">
+                <h2>Your Score: <span id="score">0</span></h2>
+                <button id="restart-quiz">Restart Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 
 </html>
